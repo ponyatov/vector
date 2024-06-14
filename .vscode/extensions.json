@@ -1,0 +1,25 @@
+{
+    "recommendations": [
+        "stkb.rewrap",
+        "ryuta46.multi-command",
+        "tabnine.tabnine-vscode",
+        "ms-vscode.makefile-tools",
+        "ms-vscode-remote.remote-ssh",
+        // Linux
+        "foxundermoon.shell-format",
+        "coolbear.systemd-unit-file",
+        // formatters
+        "xaver.clang-format",
+        "foxundermoon.shell-format",
+        // C++
+        "ms-vscode.cpptools",
+        "jeff-hykin.better-cpp-syntax",
+        "ms-vscode.cmake-tools",
+        // flex/bison
+        "daohong-emilio.yash",
+        // Rust
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb",
+    ]
+}
