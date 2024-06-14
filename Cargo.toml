@@ -6,7 +6,10 @@ authors     = ["Dmitry Ponyatov <dponyatov@gmail.com>"]
 license     = "MIT"
 repository  = "https://github.com/ponyatov/vector"
 edition     = "2021"
+publish     = false
 
 [[bin]]
+name = "vector"
+path = "src/server.rs"
 
 [dependencies]
