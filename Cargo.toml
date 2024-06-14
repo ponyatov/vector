@@ -1,0 +1,12 @@
+[package]
+name        = "vector"
+description = "vector drawing legas"
+version     = "0.0.1"
+authors     = ["Dmitry Ponyatov <dponyatov@gmail.com>"]
+license     = "MIT"
+repository  = "https://github.com/ponyatov/vector"
+edition     = "2021"
+
+[[bin]]
+
+[dependencies]
