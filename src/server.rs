@@ -3,7 +3,6 @@
 #![allow(unused_must_use)]
 #![allow(non_upper_case_globals)]
 
-use chrono::Local;
 use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
@@ -17,8 +16,6 @@ fn main() {
     let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
     for stream in listener.incoming() {
         let stream = stream.unwrap();
-        let now = Local::now().format("%Y-%m-%d %H:%M:%S");
-        println!("{now} stream");
         handle(stream);
     }
 }
@@ -31,7 +28,6 @@ fn handle(stream: TcpStream) {
         .take_while(|line| !line.is_empty())
         .collect();
     let req: &str = http_request[0].split(' ').collect::<Vec<_>>()[1];
-    println!("{req:#?}");
     route(stream, req);
 }
 
