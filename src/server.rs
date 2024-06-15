@@ -39,6 +39,7 @@ macro_rules! file {
 file!(index_html, "../static/index.html");
 file!(logo_png, "../doc/logo.png");
 file!(css_css, "../static/css.css");
+file!(jquery_js, "../static/cdn/jquery.js");
 
 macro_rules! headline {
     ($n:ident,$s:literal) => {
@@ -49,13 +50,22 @@ macro_rules! headline {
 headline!(OK, "HTTP/1.1 200 OK");
 headline!(ERR404, "HTTP/1.1 404 NotFound");
 headline!(CR, "");
-static text_plain: &'static [u8] = "Content-Type: text/plain; charset=utf-8\r\n".as_bytes();
-static text_html: &'static [u8] = "Content-Type: text/html; charset=utf-8\r\n".as_bytes();
-static text_css: &'static [u8] = "Content-Type: text/css; charset=utf-8\r\n".as_bytes();
-static app_js: &'static [u8] = "Content-Type: application/javascript; charset=utf-8\r\n".as_bytes();
-static image_png: &'static [u8] = "Content-Type: image/png\r\n".as_bytes();
 
-static jquery_js: &'static [u8] = include_bytes!("../static/cdn/jquery.js");
+macro_rules! mime {
+    ($n:ident,$s:literal,$e:literal) => {
+        static $n: &'static [u8] =
+            concat!("Content-Type: ", $s, "; charset=", $e, "\r\n").as_bytes();
+    };
+    ($n:ident,$s:literal) => {
+        static $n: &'static [u8] = concat!("Content-Type: ", $s, "\r\n").as_bytes();
+    };
+}
+
+mime!(text_plain, "text/plain", "utf-8");
+mime!(text_html, "text/html", "utf-8");
+mime!(text_css, "text/css", "utf-8");
+mime!(app_js, "application/javascript", "utf-8");
+mime!(image_png, "image/png");
 
 fn route(mut stream: TcpStream, req: &str) {
     println!("{req}");
