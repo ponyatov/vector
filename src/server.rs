@@ -1,7 +1,10 @@
 #![allow(dead_code)]
-#![allow(unused_variables)]
-#![allow(unused_must_use)]
+#![allow(unused)]
 #![allow(non_upper_case_globals)]
+
+macro_rules! send {
+    () => {};
+}
 
 use std::{
     io::{prelude::*, BufReader},

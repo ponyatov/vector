@@ -22,6 +22,10 @@ H += $(wildcard static/*) $(wildcard doc/*)
 all: $(R) $(H)
 	cargo run
 
+.PHONY: build
+build: $(R)
+	cargo build
+
 # format
 .PHONY: format
 format: tmp/format_rs
