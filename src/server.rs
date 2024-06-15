@@ -2,10 +2,6 @@
 #![allow(unused)]
 #![allow(non_upper_case_globals)]
 
-macro_rules! send {
-    () => {};
-}
-
 use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
@@ -34,23 +30,42 @@ fn handle(stream: TcpStream) {
     route(stream, req);
 }
 
-static index_html: &'static [u8] = include_bytes!("../static/index.html");
-static logo_png: &'static [u8] = include_bytes!("../doc/logo.png");
-static css_css: &'static [u8] = include_bytes!("../static/css.css");
+macro_rules! file {
+    ($n:ident,$s:literal) => {
+        static $n: &'static [u8] = include_bytes!($s);
+    };
+}
 
-static OK: &'static [u8] = "HTTP/1.1 200 OK\r\n".as_bytes();
-static ERR404: &'static [u8] = "HTTP/1.1 404 NotFound\r\n".as_bytes();
+file!(index_html, "../static/index.html");
+file!(logo_png, "../doc/logo.png");
+file!(css_css, "../static/css.css");
+
+macro_rules! headline {
+    ($n:ident,$s:literal) => {
+        static $n: &'static [u8] = concat!($s, "\r\n").as_bytes();
+    };
+}
+
+headline!(OK, "HTTP/1.1 200 OK");
+headline!(ERR404, "HTTP/1.1 404 NotFound");
+headline!(CR, "");
 static text_plain: &'static [u8] = "Content-Type: text/plain; charset=utf-8\r\n".as_bytes();
 static text_html: &'static [u8] = "Content-Type: text/html; charset=utf-8\r\n".as_bytes();
 static text_css: &'static [u8] = "Content-Type: text/css; charset=utf-8\r\n".as_bytes();
 static app_js: &'static [u8] = "Content-Type: application/javascript; charset=utf-8\r\n".as_bytes();
 static image_png: &'static [u8] = "Content-Type: image/png\r\n".as_bytes();
-static CR: &'static [u8] = "\r\n".as_bytes();
 
 static jquery_js: &'static [u8] = include_bytes!("../static/cdn/jquery.js");
 
 fn route(mut stream: TcpStream, req: &str) {
     println!("{req}");
+
+    macro_rules! send {
+        ($($a:ident),+) => {
+            $( stream.write_all($a); )*
+        };
+    }
+
     match req.trim() {
         "/" => {
             stream.write_all(OK);
@@ -65,10 +80,12 @@ fn route(mut stream: TcpStream, req: &str) {
             stream.write_all(logo_png);
         }
         "/css.css" => {
-            stream.write_all(OK);
-            stream.write_all(text_css);
-            stream.write_all(CR);
-            stream.write_all(css_css);
+            send!(OK);
+            send!(text_css, CR, css_css);
+            // stream.write_all(OK);
+            // stream.write_all(text_css);
+            // stream.write_all(CR);
+            // stream.write_all(css_css);
         }
         "/cdn/jquery.js" => {
             stream.write_all(OK);
