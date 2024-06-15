@@ -23,6 +23,10 @@ fn main() {
 
 fn route(stream: TcpStream) {
     let buf_reader = BufReader::new(stream);
-    let http_request: Vec<_> = buf_reader.lines().map(|result| result.unwrap()).collect();
+    let http_request: Vec<_> = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
     println!("{http_request:#?}");
 }

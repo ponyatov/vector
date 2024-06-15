@@ -15,10 +15,11 @@ JQUERY_URL = https://code.jquery.com
 
 # src
 R += $(wildcard src/*.rs)
+H += $(wildcard static/*) $(wildcard doc/*)
 
 # all
 .PHONY: all
-all:
+all: $(R) $(H)
 	cargo run
 
 # format
