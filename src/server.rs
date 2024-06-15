@@ -97,8 +97,9 @@ fn route(mut stream: TcpStream, req: &str) {
         }
 
         _ => {
-            send!(ERR404, text_plain, CR);
-            send!(format!("ERR404: {req}").as_bytes());
+            send!(ERR404, text_html, CR);
+            send!("<link href=/css.css rel=stylesheet type=text/css>".as_bytes());
+            send!(format!("<h1 class=error>Not Found: {req}").as_bytes());
         }
     }
 }

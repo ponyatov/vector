@@ -1,1 +1,9 @@
-* { background: #222; color: lightgreen; }
+* {
+    background: #222;
+    color: lightgreen;
+    font-family: monospace;
+}
+
+.error {
+    color: lightsalmon;
+}
