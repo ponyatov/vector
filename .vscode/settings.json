@@ -44,4 +44,8 @@
         "editor.formatOnSave":     true
     },
     "C_Cpp.intelliSenseEngine": "Tag Parser",
+
+    // Rust
+    "rust-analyzer.checkOnSave": false,
+    "[rust]": {"editor.formatOnSave": false}
 }
