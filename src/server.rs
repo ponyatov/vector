@@ -71,43 +71,34 @@ fn route(mut stream: TcpStream, req: &str) {
     println!("{req}");
 
     macro_rules! send {
+        ($a:ident,$b:ident) => {
+            send!(OK,$a,CR,$b)
+        };
         ($($a:ident),+) => {
+            $( stream.write_all($a); )*
+        };
+        ($($a:expr),+) => {
             $( stream.write_all($a); )*
         };
     }
 
     match req.trim() {
         "/" => {
-            stream.write_all(OK);
-            stream.write_all(text_html);
-            stream.write_all(CR);
-            stream.write_all(index_html);
+            send!(text_html, index_html);
         }
         "/favicon.ico" | "/logo.png" => {
-            stream.write_all(OK);
-            stream.write_all(image_png);
-            stream.write_all(CR);
-            stream.write_all(logo_png);
+            send!(image_png, logo_png);
         }
         "/css.css" => {
-            send!(OK);
-            send!(text_css, CR, css_css);
-            // stream.write_all(OK);
-            // stream.write_all(text_css);
-            // stream.write_all(CR);
-            // stream.write_all(css_css);
+            send!(text_css, css_css);
         }
         "/cdn/jquery.js" => {
-            stream.write_all(OK);
-            stream.write_all(app_js);
-            stream.write_all(CR);
-            stream.write_all(jquery_js);
+            send!(app_js, jquery_js);
         }
+
         _ => {
-            stream.write_all(ERR404);
-            stream.write_all(text_plain);
-            stream.write_all(CR);
-            stream.write_all(format!("ERR404: {req}").as_bytes());
+            send!(ERR404, text_plain, CR);
+            send!(format!("ERR404: {req}").as_bytes());
         }
     }
 }
