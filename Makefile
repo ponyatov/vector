@@ -20,7 +20,11 @@ H += $(wildcard static/*) $(wildcard doc/*)
 # all
 .PHONY: all
 all: $(R) $(H)
-	cargo run
+	cargo build
+
+.PHONY: run
+run: $(R) $(H)
+	cargo $@
 
 .PHONY: build
 build: $(R)

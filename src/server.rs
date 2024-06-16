@@ -12,11 +12,13 @@ const PORT: i16 = 12345;
 
 fn main() {
     println!("server @ http://{IP}:{PORT}");
-    let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        handle(stream);
-    }
+    std::env::current_exe().unwrap();
+    // println! ("{}",std::env::current_exe().unwrap().file_name()?.to_str()?);
+    // let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
+    // for stream in listener.incoming() {
+    //     let stream = stream.unwrap();
+    //     handle(stream);
+    // }
 }
 
 fn handle(stream: TcpStream) {
