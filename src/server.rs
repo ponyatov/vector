@@ -16,22 +16,20 @@ use notify::{RecursiveMode, Watcher};
 const IP: &str = "127.0.0.1";
 const PORT: i16 = 12345;
 
-fn miwait(ms:uint) {
-    thread::sleep(time::Duration::from_millis(ms));
-}
-
 fn main() {
     let argv0 = std::env::current_exe().unwrap();
     let argv_0 = argv0.display();
     println!("{argv_0} @ http://{IP}:{PORT}");
 
-
     let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
-    let fd = listener.as_raw_fd();
+    let listener_sock = listener.as_raw_fd();
 
     let mut watcher = notify::recommended_watcher(move |res| match res {
         Ok(event) => {
-            unsafe { libc::shutdown(fd, libc::SHUT_RD) };
+            unsafe {
+                libc::close(listener_sock);
+                // libc::shutdown(listener_fd, libc::SHUT_RD);
+            };
             Command::new("proc/self/exe").exec();
             std::process::exit(0)
         }
