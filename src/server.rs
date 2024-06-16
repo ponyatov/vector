@@ -7,8 +7,6 @@ use std::{
     net::{TcpListener, TcpStream},
     os::unix::{io::AsRawFd, process::CommandExt},
     path::Path,
-    process::Command,
-    thread, time,
 };
 
 use notify::{RecursiveMode, Watcher};
@@ -37,6 +35,12 @@ fn main() {
 
     watcher
         .watch(Path::new(&argv0), RecursiveMode::NonRecursive)
+        .unwrap();
+    watcher
+        .watch(Path::new("src"), RecursiveMode::Recursive)
+        .unwrap();
+    watcher
+        .watch(Path::new("static"), RecursiveMode::Recursive)
         .unwrap();
 
     for stream in listener.incoming() {
