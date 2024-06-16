@@ -24,7 +24,7 @@ all: $(R) $(H)
 
 .PHONY: run
 run: $(R) $(H)
-	cargo $@
+	cargo $@ && $(MAKE) $@
 
 .PHONY: build
 build: $(R)

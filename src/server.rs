@@ -28,9 +28,7 @@ fn main() {
         Ok(event) => {
             unsafe {
                 libc::close(listener_sock);
-                // libc::shutdown(listener_fd, libc::SHUT_RD);
             };
-            Command::new("proc/self/exe").exec();
             std::process::exit(0)
         }
         Err(e) => println!("watch error: {:?}", e),
