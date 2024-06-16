@@ -5,20 +5,48 @@
 use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
+    os::unix::{io::AsRawFd, process::CommandExt},
+    path::Path,
+    process::Command,
+    thread, time,
 };
+
+use notify::{RecursiveMode, Watcher};
 
 const IP: &str = "127.0.0.1";
 const PORT: i16 = 12345;
 
+fn miwait(ms:uint) {
+    thread::sleep(time::Duration::from_millis(ms));
+}
+
 fn main() {
-    println!("server @ http://{IP}:{PORT}");
-    std::env::current_exe().unwrap();
-    // println! ("{}",std::env::current_exe().unwrap().file_name()?.to_str()?);
-    // let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
-    // for stream in listener.incoming() {
-    //     let stream = stream.unwrap();
-    //     handle(stream);
-    // }
+    let argv0 = std::env::current_exe().unwrap();
+    let argv_0 = argv0.display();
+    println!("{argv_0} @ http://{IP}:{PORT}");
+
+
+    let listener = TcpListener::bind(format!("{IP}:{PORT}")).unwrap();
+    let fd = listener.as_raw_fd();
+
+    let mut watcher = notify::recommended_watcher(move |res| match res {
+        Ok(event) => {
+            unsafe { libc::shutdown(fd, libc::SHUT_RD) };
+            Command::new("proc/self/exe").exec();
+            std::process::exit(0)
+        }
+        Err(e) => println!("watch error: {:?}", e),
+    })
+    .unwrap();
+
+    watcher
+        .watch(Path::new(&argv0), RecursiveMode::NonRecursive)
+        .unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+        handle(stream);
+    }
 }
 
 fn handle(stream: TcpStream) {

@@ -14,3 +14,4 @@ path = "src/server.rs"
 
 [dependencies]
 notify = "6.1.1"
+libc = "0.2.155"
